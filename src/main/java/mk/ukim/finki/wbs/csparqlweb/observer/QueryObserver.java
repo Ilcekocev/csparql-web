@@ -8,7 +8,14 @@ import java.util.Iterator;
 import java.util.Observable;
 
 public class QueryObserver extends ResultFormatter {
+
+    private String username;
+
     public QueryObserver() {
+    }
+
+    public QueryObserver(String username) {
+        this.username = username;
     }
 
     public void update(Observable o, Object arg) {
@@ -22,7 +29,15 @@ public class QueryObserver extends ResultFormatter {
             System.out.println(t.toString());
         }
 
-        System.out.println("Push notification to user here.");
+        System.out.println("Push notification to user " + username + " here.");
         System.out.println();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
