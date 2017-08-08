@@ -18,7 +18,7 @@ public class EventController {
 
     private static Logger logger = LoggerFactory.getLogger(EventController.class);
 
-    final BasicStream stream;
+    private final BasicStream stream;
 
     @Autowired
     public EventController(BasicStream stream) {
