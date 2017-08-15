@@ -8,7 +8,8 @@ curl --request POST \
     --url http://localhost:8080/api/user \
     --header 'content-type: application/json' \
     --data '{
-  	"username": "test"
+  	"username": "test",
+  	"token": "fcm-token"
   } '
 ```
 * Register a query
