@@ -11,7 +11,6 @@ import mk.ukim.finki.wbs.csparqlweb.stream.BasicStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.text.ParseException;
 
 @Controller
@@ -39,7 +39,7 @@ public class UserQueryController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/api/user/{username}", method=RequestMethod.GET)
+    @RequestMapping(value = "/api/user/{username}", method = RequestMethod.GET)
     public ResponseEntity<User> getUser(@PathVariable("username") String username) {
         User user = userRepository.findByUsername(username);
 
@@ -50,8 +50,23 @@ public class UserQueryController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/api/token", method = RequestMethod.POST)
+    public ResponseEntity<Void> refreshToken(@RequestBody User user, UriComponentsBuilder uriBuilder) {
+
+        if (null == userRepository.findByUsername(user.getUsername())) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        User u = userRepository.findByUsername(user.getUsername());
+        u.setToken(user.getToken());
+
+        userRepository.save(u);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/api/user", method = RequestMethod.POST)
-    public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Void> createUser(@RequestBody User user, UriComponentsBuilder uriBuilder) throws IOException {
 
         if (null != userRepository.findByUsername(user.getUsername())) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -65,7 +80,7 @@ public class UserQueryController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/api/user/{username}/query", method=RequestMethod.POST)
+    @RequestMapping(value = "/api/user/{username}/query", method = RequestMethod.POST)
     public ResponseEntity<Void> createQuery(@PathVariable String username, @RequestBody Query query, UriComponentsBuilder uriBuilder) {
 
         User user = userRepository.findByUsername(username);
@@ -92,7 +107,7 @@ public class UserQueryController {
         }
 
         if (null != c) {
-            c.addObserver(new QueryObserver(user.getUsername()));
+            c.addObserver(new QueryObserver(user));
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);

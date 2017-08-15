@@ -11,14 +11,16 @@ public class User {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     private String username;
+    private String token;
 
     @OneToMany(mappedBy = "user")
     private List<Query> queries;
 
     protected User() {}
 
-    public User(String username) {
+    public User(String username, String token) {
         this.username = username;
+        this.token = token;
     }
 
     @Override
@@ -52,5 +54,13 @@ public class User {
 
     public void setQueries(ArrayList<Query> queries) {
         this.queries = queries;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
