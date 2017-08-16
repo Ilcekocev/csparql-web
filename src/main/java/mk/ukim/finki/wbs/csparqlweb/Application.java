@@ -1,13 +1,16 @@
 package mk.ukim.finki.wbs.csparqlweb;
 
+import com.fasterxml.jackson.databind.BeanProperty;
 import eu.larkc.csparql.cep.api.RdfStream;
 import eu.larkc.csparql.core.engine.CsparqlEngine;
 import eu.larkc.csparql.core.engine.CsparqlEngineImpl;
 import eu.larkc.csparql.core.engine.CsparqlQueryResultProxy;
+import mk.ukim.finki.wbs.csparqlweb.observer.QueryObserver;
 import mk.ukim.finki.wbs.csparqlweb.stream.BasicStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -32,14 +35,18 @@ public class Application {
 
     @Bean
     public CsparqlEngine getCsparqlEngine() {
-        CsparqlEngine engine = new CsparqlEngineImpl();
-        return engine;
+        return new CsparqlEngineImpl();
     }
 
     @Bean
     public BasicStream getStream() {
-        BasicStream stream = new BasicStream("http://myexample.org/stream");
-        return stream;
+        return new BasicStream("http://myexample.org/stream");
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public QueryObserver getQueryObserver() {
+        return new QueryObserver();
     }
 
     @PostConstruct

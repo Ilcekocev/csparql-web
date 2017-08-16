@@ -30,13 +30,15 @@ public class UserQueryController {
     final BasicStream rdfStream;
     final QueryRepository queryRepository;
     final UserRepository userRepository;
+    private QueryObserver queryObserver;
 
     @Autowired
-    public UserQueryController(CsparqlEngine engine, BasicStream rdfStream, QueryRepository queryRepository, UserRepository userRepository) {
+    public UserQueryController(CsparqlEngine engine, BasicStream rdfStream, QueryRepository queryRepository, UserRepository userRepository, QueryObserver queryObserver) {
         this.engine = engine;
         this.rdfStream = rdfStream;
         this.queryRepository = queryRepository;
         this.userRepository = userRepository;
+        this.queryObserver = queryObserver;
     }
 
     @RequestMapping(value = "/api/user/{username}", method = RequestMethod.GET)
@@ -107,7 +109,8 @@ public class UserQueryController {
         }
 
         if (null != c) {
-            c.addObserver(new QueryObserver(user.getToken()));
+            queryObserver.setUser(user);
+            c.addObserver(queryObserver);
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);
