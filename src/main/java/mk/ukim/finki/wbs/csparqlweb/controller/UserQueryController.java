@@ -107,7 +107,7 @@ public class UserQueryController {
         }
 
         if (null != c) {
-            c.addObserver(new QueryObserver(user));
+            c.addObserver(new QueryObserver(user.getToken()));
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);

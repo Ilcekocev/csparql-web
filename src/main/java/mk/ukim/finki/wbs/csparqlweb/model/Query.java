@@ -11,6 +11,7 @@ public class Query {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(length=1024)
     private String definition;
 
     @JsonIgnore

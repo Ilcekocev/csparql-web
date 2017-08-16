@@ -14,10 +14,10 @@ import java.util.Observable;
 
 public class QueryObserver extends ResultFormatter {
 
-    private User user;
+    private String token;
 
-    public QueryObserver(User user) {
-        this.user = user;
+    public QueryObserver(String token) {
+        this.token = token;
     }
 
     public void update(Observable o, Object arg) {
@@ -38,10 +38,9 @@ public class QueryObserver extends ResultFormatter {
         JsonObject message = new JsonObject();
         message.addProperty("title", "New notification");
         message.addProperty("body", "Hello World!");
-        data.addProperty("to", user.getToken());
+        data.addProperty("to", token);
         data.add("notification", message);
-
-        System.out.println("Push notification to user " + user + " here.");
+        System.out.println("Push notification to user " + token + " here.");
         okhttp3.RequestBody body = okhttp3.RequestBody.create(JSON, data.toString());
         Request request = new Request.Builder()
                 .header("Authorization", "key=AAAAnyHg1qM:APA91bGl2qE6RHE9Hjcp8AvLOxfp-kzHZjEjGjIPdBQBn-dEIPNrq8GvCuZ0p9LvzxbNo0uCBIG9dwUDhpvc1cIVXLdmUwzztOrWKbWuVcEeNrTH2G7IalgayBAdvZWPOwtukL8--fFX")
@@ -56,11 +55,11 @@ public class QueryObserver extends ResultFormatter {
         System.out.println();
     }
 
-    public User getUser() {
-        return user;
+    public String getToken() {
+        return token;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setToken(String token) {
+        this.token = token;
     }
 }
