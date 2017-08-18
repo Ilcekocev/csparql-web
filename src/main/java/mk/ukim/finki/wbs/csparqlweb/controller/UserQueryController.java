@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 @Controller
 public class UserQueryController {
@@ -50,6 +51,19 @@ public class UserQueryController {
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/api/users", method = RequestMethod.GET)
+    public ResponseEntity<List<User>> getUsers() {
+
+       List<User> users = userRepository.findAll();
+
+       if (users.size()==0) {
+           return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+       }
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/api/token", method = RequestMethod.POST)
