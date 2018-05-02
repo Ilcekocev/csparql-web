@@ -2,21 +2,30 @@ package mk.ukim.finki.wbs.csparqlweb.model;
 
 import eu.larkc.csparql.cep.api.RdfQuadruple;
 
-import javax.persistence.Entity;
-
-public class Event {
+public class EventSim {
 
     private String subject;
     private String predicate;
     private String object;
+    private long timestamp;
 
-    protected Event() {}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-    public Event(String subject, String predicate, String object) {
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    protected EventSim() {}
+
+    public EventSim(String subject, String predicate, String object, long timestamp) {
         this.subject = subject;
         this.predicate = predicate;
         this.object = object;
+        this.timestamp = timestamp;
     }
+
 
     public RdfQuadruple convertToRdfQuadruple() {
         return new RdfQuadruple(this.subject, this.predicate, this.object, System.currentTimeMillis());
@@ -44,5 +53,10 @@ public class Event {
 
     public void setObject(String object) {
         this.object = object;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s %d",subject,predicate,object,timestamp);
     }
 }
